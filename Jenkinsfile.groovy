@@ -1,6 +1,5 @@
 pipeline {
-    agent master
-
+    
     tools {
         maven "M3"
     }
