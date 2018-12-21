@@ -13,14 +13,20 @@ pipeline {
     stages {
         stage ('Info'){
             steps {
-                sh 'echo "skip_param = ${skip_param}"'
-                sh 'echo "branch = ${branch}"'
+                sh 'echo "skip_param= ${skip_param}"'
+                sh 'echo "branch= ${branch}"'
             }
 
         }
-        stage ('Build'){
+        stage ('Checkout'){
             steps {
                 git branch: "${branch}", url: "https://github.com/jenkinsci/jenkins.git"
+            }
+        }
+
+        stage ('Build'){
+            steps {
+                sh "mvn clean package --DskipTests= ${skip_param}"
             }
         }
     }   
