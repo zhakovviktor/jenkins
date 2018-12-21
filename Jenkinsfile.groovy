@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent master
 
     tools {
         maven "M3"
@@ -26,7 +26,7 @@ pipeline {
 
         stage ('Build'){
             steps {
-                sh 'mvn clean package -DskipTests=${skip_param}'
+                sh "mvn clean package -DskipTests=${skip_param}"
             }
         }
     }   
