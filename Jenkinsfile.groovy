@@ -1,6 +1,6 @@
 pipeline {
     agent none 
-    
+
     tools {
         maven "M3"
     }
@@ -10,24 +10,28 @@ pipeline {
         string defaultValue: 'master', description: '', name: 'branch', trim: true
     }
 
-    stages {
-        stage ('Info'){
-            steps {
-                sh 'echo "skip_param= ${skip_param}"'
-                sh 'echo "branch= ${branch}"'
+    node {
+        stages {
+            stage ('Info'){
+                steps {
+                    sh 'echo "skip_param= ${skip_param}"'
+                    sh 'echo "branch= ${branch}"'
+                }
+
+            }
+            stage ('Checkout'){
+                steps {
+                    dir ('sources'){
+                        git branch: "${branch}", url: "https://github.com/jenkinsci/jenkins.git"
+                    }
+                }
             }
 
-        }
-        stage ('Checkout'){
-            steps {
-                git branch: "${branch}", url: "https://github.com/jenkinsci/jenkins.git"
+            stage ('Build'){
+                steps {
+                    sh "mvn clean package -DskipTests=${skip_param}"
+                }
             }
-        }
-
-        stage ('Build'){
-            steps {
-                sh "mvn clean package -DskipTests=${skip_param}"
-            }
-        }
-    }   
+        }   
+    }
 }
